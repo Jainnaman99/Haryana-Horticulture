@@ -26,7 +26,7 @@ def create_app() -> FastAPI:
     
     # Include routers
     app.include_router(sample.router, prefix="/api/v1", tags=["sample"])
-    app.include_router(users.router, prefix="/api/v1")
+    # app.include_router(users.router, prefix="/api/v1")
     app.include_router(auth.router, prefix="/api/v1")
     # app.include_router(health.router, prefix="/api/v1", tags=["health"])
     # app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
