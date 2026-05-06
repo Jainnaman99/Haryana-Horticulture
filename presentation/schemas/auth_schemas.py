@@ -45,7 +45,7 @@ class TokenResponse(BaseModel):
     refresh_token: str
     token_type:    str = "bearer"
     role:          str
-    office_code:   int
+    # office_code:   int
 
 class RefreshRequest(BaseModel):
     refresh_token: str

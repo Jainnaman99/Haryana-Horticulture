@@ -30,7 +30,7 @@ async def change_password(
     current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_session)
 ):
-    return await AuthService.change_password(payload, current_user["UserID"], db)
+    return await AuthService.change_password(payload, current_user["UserName"], db)
 
 @router.post("/unlock/{user_id}", dependencies=[Depends(require_roles(["Admin", "SuperAdmin"]))])
 async def unlock_user(user_id: str, db: AsyncSession = Depends(get_session)):

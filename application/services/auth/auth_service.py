@@ -22,7 +22,7 @@ class AuthService:
     async def login(payload: LoginRequest, db: AsyncSession) -> TokenResponse:
 
         auth_data = await exec_sp_one(db, "SP_Auth_GetHashOnly", {
-            "UserID": payload.username
+            "UserName": payload.username
         })
 
         if not auth_data or not auth_data["Active"]:
@@ -104,7 +104,7 @@ class AuthService:
     ) -> dict:
 
         auth_data = await exec_sp_one(db, "SP_Auth_GetHashOnly", {
-            "UserID": current_user_id
+            "UserName": current_user_id
         })
 
         if not auth_data or not auth_data["Active"]:
@@ -123,7 +123,7 @@ class AuthService:
         auth_data["UserPass"] = None
 
         temp_auth = await exec_sp_one(db, "SP_Auth_GetHashOnly", {
-            "UserID": current_user_id
+            "UserName": current_user_id
         })
 
         is_same = verify_password(payload.new_password, temp_auth["UserPass"])
@@ -220,17 +220,17 @@ class AuthService:
     @staticmethod
     def _build_token_response(user: dict) -> TokenResponse:
         token_payload = {
-            "sub": user["UserID"],
+            "sub": user["UserName"],
             "role_id": user["RoleID"],
             "role_name": user["User_Role"],
-            "office_code": user["Office_Code"],
+            # "office_code": user["Office_Code"],
             "uuid_id": user["Uuid_ID"],
         }
         return TokenResponse(
             access_token=create_access_token(token_payload),
             refresh_token=create_refresh_token(token_payload),
             role=user["User_Role"],
-            office_code=user["Office_Code"],
+            # office_code=user["Office_Code"],
         )
     
     @staticmethod
@@ -242,7 +242,7 @@ class AuthService:
 
         # Step 2: SP verifies username + mobile match, then updates hash
         result = await exec_sp_one(db, "SP_Auth_ResetPassword", {
-            "UserID":      payload.username,
+            "UserName":      payload.username,
             "Mobile":      payload.mobile,
             "NewHashPass": new_hashed
         })
