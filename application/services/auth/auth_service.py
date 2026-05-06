@@ -38,7 +38,7 @@ class AuthService:
 
         if not password_valid:
             result = await exec_sp_one(db, "SP_Auth_LoginFailed", {
-                "UserID": payload.username,
+                "UserName": payload.username,
                 "MaxAttempts": 5,
                 "LockDurationMin": 15
             })
@@ -56,7 +56,7 @@ class AuthService:
             )
 
         user = await exec_sp_one(db, "SP_Auth_LoginSuccess", {
-            "UserID": payload.username
+            "UserName": payload.username
         })
         await db.commit()
 
@@ -71,9 +71,9 @@ class AuthService:
         hashed = hash_password(payload.password)
 
         result = await exec_sp_one(db, "SP_Auth_RegisterUser", {
-            "UserID": payload.username,
-            "HashedPass": hashed,
-            "Officer_Name": payload.officer_name,
+            "UserName": payload.username,
+            "PasswordHash": hashed,
+            "OfficerName": payload.officer_name,
             "EmailID": payload.email_id,
             "Mobile": payload.mobile,
             "RoleID": payload.role_id
@@ -138,7 +138,7 @@ class AuthService:
         new_hashed = hash_password(payload.new_password)
 
         result = await exec_sp_one(db, "SP_Auth_ChangePassword", {
-            "UserID": current_user_id,
+            "UserName": current_user_id,
             "NewHashedPass": new_hashed
         })
         await db.commit()
@@ -170,7 +170,7 @@ class AuthService:
             )
 
         user = await exec_sp_one(db, "SP_Auth_GetUserByID", {
-            "UserID": data.get("sub")
+            "UserName": data.get("sub")
         })
 
         if not user or not user["Active"]:
@@ -190,7 +190,7 @@ class AuthService:
     async def unlock_user(target_user_id: str, db: AsyncSession) -> dict:
 
         result = await exec_sp_one(db, "SP_Auth_UnlockUser", {
-            "UserID": target_user_id
+            "UserName": target_user_id
         })
         await db.commit()
 

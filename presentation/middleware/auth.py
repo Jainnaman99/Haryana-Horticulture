@@ -63,7 +63,7 @@ async def get_current_user(
     Enforces Active status and lockout state.
     """
     user = await exec_sp_one(db, "SP_Auth_GetUserByID", {
-        "UserID": token_data.user_id
+        "UserName": token_data.user_id
     })
 
     if not user:
