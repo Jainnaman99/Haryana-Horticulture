@@ -2,7 +2,7 @@ import webbrowser
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from presentation.api.v1 import sample,users,auth
+from presentation.api.v1 import sample, users, auth, components
 from config.settings import get_settings
 from infrastructure.database.connection import init_db
 
@@ -28,6 +28,7 @@ def create_app() -> FastAPI:
     app.include_router(sample.router, prefix="/api/v1", tags=["sample"])
     # app.include_router(users.router, prefix="/api/v1")
     app.include_router(auth.router, prefix="/api/v1")
+    app.include_router(components.router, prefix="/api/v1")
     # app.include_router(health.router, prefix="/api/v1", tags=["health"])
     # app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
     # app.include_router(products.router, prefix="/api/v1/products", tags=["products"])
